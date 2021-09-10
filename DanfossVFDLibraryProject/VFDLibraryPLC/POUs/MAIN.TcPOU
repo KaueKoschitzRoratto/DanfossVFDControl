@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MAIN" Id="{dabc6520-cbb1-40f9-9201-b2d1d653947d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fbDriveControl	: FB_VLTDriveControl;
+	bEnable		: BOOL;
+	bRun		: BOOL;
+	nSpeed		: INT;
+	bReverse	: BOOL;
+	nState		: INT;
+	bResetDrive	: BOOL;
+	sDriveAmsNetId	: STRING := '5.24.39.150.5.1';
+	nDriveAddr	: UINT := 1001;
+	nAlarms		: ULINT;
+	nWarnings	: ULINT;
+	bRdParam	: BOOL;
+	bWrParam	: BOOL;
+	nParamNo	: UINT;
+	nCounter	: INT;
+	cbAmntRd	: UDINT;
+	nParResult	: ULINT;
+	fbCoERead	: FB_EcCoESdoRead;
+	fbCoEWrite	: FB_EcCoESdoWrite;
+	EL7411	AT %I* : UDINT;
+	nCheck	: INT := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE nState OF
+0:
+	IF(fbDriveControl.Initialize(sDriveAmsNetId,nDriveAddr)) THEN
+		nState :=1;
+	END_IF
+1:
+bEnable :=TRUE;
+	IF fbDriveControl.bDriveReady AND NOT fbDriveControl.bDriveFault THEN
+		nState := 2;
+	END_IF
+2:
+	bRun	:= FALSE;
+	nSpeed := 5000;
+	bReverse := FALSE;
+	nState := 3;
+	fbCoERead(
+	sNetId:= sDriveAmsNetId, 
+	nSlaveAddr:= nDriveAddr, 
+	tTimeout:= T#5S,
+	bExecute := FALSE 
+	);
+	fbCoEWrite(
+	sNetId:= sDriveAmsNetId, 
+	nSlaveAddr:= nDriveAddr, 
+	tTimeout := T#5S,
+	bExecute := FALSE
+	);
+3: 
+	
+	IF GVL_HMI.bRdParams OR GVL_HMI.bWrDone THEN		
+		nState := 4;
+	ELSE 
+		bRdParam := FALSE;
+	END_IF
+	
+	IF GVL_HMI.bWrParams AND NOT fbDriveControl.bParBusy THEN
+		nState := 6;
+	ELSE
+		bWrParam := FALSE;		
+	END_IF
+4:
+	bRdParam := TRUE;
+	fbCoERead.nIndex := UINT_TO_WORD(GVL_HMI.arrParamNo[nCounter]+ 16#2000);
+	fbCoERead.nSubIndex := 0;
+	GVL_HMI.arrParamData[nCounter].nRdVal := 0;
+	fbCoERead.pDstBuf := ADR(GVL_HMI.arrParamData[nCounter].nRdVal);
+	fbCoeRead.cbBufLen := SIZEOF(GVL_HMI.arrParamData[nCounter].nRdVal);
+
+		
+	nState := 5;
+
+5:
+			
+		
+		IF NOT fbCoERead.bBusy AND NOT fbCoERead.bError THEN
+			bRdParam := FALSE;
+			
+			nParResult := 0;		
+			IF nCounter < GVL_HMI.nParamCount - 1THEN		
+				nCounter := nCounter +1;
+				nState :=	4;	
+			ELSE
+				nCounter := 0;
+				nState := 3;
+				GVL_HMI.bRdParams := FALSE;
+				GVL_HMI.bRdDone	:= TRUE;
+				GVL_HMI.bWrDone := FALSE;
+			END_IF
+		END_IF
+		
+	IF fbCoERead.bError THEN
+		IF fbCoERead.nErrId = 1795 OR fbCoERead.nErrId =1797 THEN
+			GVL_HMI.arrParamData[nCounter].nRdVal := fbCoERead.nErrId;
+			nCounter := nCounter +1;
+		END_IF
+		bRdParam:= FALSE;
+		nState := 3;	
+	END_IF
+6:
+	bWrParam := TRUE;
+	fbCoEWrite.nSubIndex:= 0; 
+	IF GVL_HMI.arrParamData[nCounter].nWrVal <> GVL_HMI.arrParamData[nCounter].nRdVal THEN
+	fbCoEWrite.nIndex:= GVL_HMI.arrParamNo[nCounter] + 16#2000; 
+	fbCoEWrite.pSrcBuf:= ADR(GVL_HMI.arrParamData[nCounter].nWrVal); 
+	fbCoEWrite.cbBufLen:= SIZEOF(GVL_HMI.arrParamData[nCounter].nWrVal);	
+	nState := 7;
+	ELSE
+		IF nCounter < GVL_HMI.nParamCount-1 THEN
+			nCounter := nCounter+1;	
+		ELSE
+			nCounter := 0;
+			nState := 3;
+			GVL_HMI.bWRParams := FALSE;
+			GVL_HMI.bWrDone	:= TRUE;
+		END_IF
+	END_IF
+7:
+	IF NOT fbCoEWrite.bBusy AND NOT fbCoEWrite.bError THEN
+			bWrParam := FALSE;
+			
+			IF nCounter < GVL_HMI.nParamCount - 1THEN		
+				nCounter := nCounter +1;
+				nState :=	6;	
+			ELSE
+				nCounter := 0;
+				nState := 3;
+				GVL_HMI.bWRParams := FALSE;
+				GVL_HMI.bWrDone	:= TRUE;
+			END_IF
+				
+				
+		END_IF
+		
+	IF fbCoEWrite.bError THEN
+		IF fbCoEWrite.nErrId = 1795 OR fbCoEWrite.nErrId =1797 THEN
+			nCounter := nCounter +1;
+		END_IF
+		bWrParam:= FALSE;
+		nState := 3;	
+	END_IF
+END_CASE
+
+fbDriveControl.DriveRun(bEnable,bRun,bReverse,nSpeed,bResetDrive);
+
+
+IF NOT fbDriveControl.bDriveFault THEN
+		//fbDriveControl.GetDriveDiag(nDriveAlarms =>nAlarms,nDriveWarningS => nWarnings,bAlarm =>GVL_HMI.bAlarm, bWarning => GVL_HMI.bWarning);
+		IF GVL_HMI.bAlarm OR GVL_HMI.bWarning OR GVL_HMI.bReset THEN
+			bResetDrive := TRUE;
+		END_IF
+END_IF
+fbCoERead(bExecute := bRdParam,cbRead =>cbAmntRd);
+fbCoEWrite(bExecute := bWrParam);
+GVL_HMI.bOkay := fbDriveControl.bDriveReady;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

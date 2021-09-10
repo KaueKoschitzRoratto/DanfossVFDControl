@@ -1,0 +1,156 @@
+﻿{
+  "$schema": "../../Packages/Beckhoff.TwinCAT.HMI.Framework-12.748.0/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
+  "basePath": "./framework",
+  "scaleMode": "None",
+  "startupView": "Main.view",
+  "loginPage": "",
+  "tcHmiServer": {
+    "websocketIntervalTime": 500,
+    "websocketTimeout": 20000,
+    "websocketSystemTimeout": 60000,
+    "websocketSubscriptionMode": "Change"
+  },
+  "activeTheme": "Base",
+  "themes": {
+    "Base": {
+      "resources": [
+        {
+          "name": "Themes/Base/Base.theme",
+          "description": "",
+          "type": "ThemedValues"
+        },
+        {
+          "name": "Themes/Base/BaseStyle.css",
+          "description": "",
+          "type": "Stylesheet"
+        }
+      ],
+      "replacesThemeForControls": [
+        "TcHmi.Controls.Beckhoff.TcHmiButton"
+      ]
+    },
+    "Theme1": {
+      "resources": [
+        {
+          "name": "Themes/Theme1/Theme1.theme",
+          "description": "",
+          "type": "ThemedValues"
+        },
+        {
+          "name": "Themes/Theme1/Style.css",
+          "description": "",
+          "type": "Stylesheet"
+        }
+      ],
+      "replacesThemeForControls": []
+    }
+  },
+  "dependencyFiles": [
+    {
+      "name": "Fonts/Fonts.css",
+      "description": "",
+      "type": "Stylesheet"
+    },
+    {
+      "name": "Functions/getParams.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/ReadParameters.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/WriteParameters.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/ReadFromXML.js",
+      "description": "",
+      "type": "JavaScript"
+    }
+  ],
+  "userControls": [
+    {
+      "url": "DanfossParamAccessor.usercontrol"
+    }
+  ],
+  "content": [],
+  "views": [
+    {
+      "url": "Main.view",
+      "preload": false,
+      "keepAlive": false
+    }
+  ],
+  "userFunctions": [
+    {
+      "url": "Functions/ReadParameters.js"
+    },
+    {
+      "url": "Functions/WriteParameters.js"
+    },
+    {
+      "url": "Functions/ReadFromXML.js"
+    },
+    {
+      "url": "Functions/getParams.js"
+    }
+  ],
+  "symbols": {
+    "internal": {
+      "MenuNo": {
+        "type": "tchmi:general#/definitions/UINT",
+        "persist": false,
+        "readonly": false
+      },
+      "GridData": {
+        "value": [],
+        "type": "tchmi:project#/definitions/Array(0..99) OF stGridData",
+        "persist": false,
+        "readonly": false
+      }
+    }
+  },
+  "trigger": [],
+  "actionTemplates": [],
+  "languages": {
+    "de-DE": "Localization\\de-DE.localization",
+    "en-US": "Localization\\en-US.localization"
+  },
+  "languageFallback": "",
+  "disableLoadingOptimization": false,
+  "creatorSettings": {
+    "viewport": {
+      "defaultWidth": 800,
+      "defaultHeight": 600
+    }
+  },
+  "binding": {
+    "symbolError": "Ignore"
+  },
+  "packages": [
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Controls",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Controls"
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Framework",
+      "basePath": "/framework"
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Functions",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Functions"
+    }
+  ],
+  "keyboardLayouts": [
+    {
+      "url": "KeyboardLayouts/German - compact.keyboard.json"
+    },
+    {
+      "url": "KeyboardLayouts/US - compact.keyboard.json"
+    }
+  ]
+}

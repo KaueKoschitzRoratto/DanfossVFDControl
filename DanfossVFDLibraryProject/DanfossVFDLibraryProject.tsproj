@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.17">
+	<Project ProjectGUID="{4B61D8D1-0518-4653-8107-C9E61248B750}" TargetNetId="5.24.39.150.1.1" ShowHideConfigurations="#x106">
+		<System>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project File="VFDLibraryPLC.xti"/>
+		</Plc>
+		<Io>
+			<Device Id="4" DevType="111" DevFlags="#x0003" AmsPort="28676" AmsNetId="5.24.39.150.5.1" RemoteName="Device 4 (EtherCAT)" InfoImageId="6">
+				<Name>Device 4 (EtherCAT)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc>Local Area Connection (X001)</DeviceDesc>
+						<DeviceName>\DEVICE\{BAC3327E-F140-4DEB-AFDE-7650DBAF9CED}</DeviceName>
+						<DeviceData>000105182796</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Image Id="4" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="1" BoxType="9099">
+					<Name>Box 1 (FC-302 VLT® Automation Drive)</Name>
+					<ImageId>114</ImageId>
+					<EtherCAT SlaveType="2" PdiType="#x0c80" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x0200008d" ProductCode="#x00000064" RevisionNo="#x00000003" InfoDataAddr="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="FC-302 VLT® Automation Drive" Desc="FC-302 VLT® Automation Drive" PortABoxInfo="#x00ffffff">
+						<SyncMan>001078052600010001000000000000007805001026010000</SyncMan>
+						<SyncMan>781578052200010002000000000000007805781522010000</SyncMan>
+						<SyncMan>f01a04006400010003000000000000000000f01a64000000</SyncMan>
+						<SyncMan>f01b08002000010004000000000000000000f01b20000000</SyncMan>
+						<Fmmu>0000000000000000f01b00010100000002000000000000000000000000000000</Fmmu>
+						<Fmmu>0000000000000000f01a00020100000001000000000000000000000000000000</Fmmu>
+						<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+						<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+						<BootStrapData>0010780578157805</BootStrapData>
+						<Pdo Name="Transmit PDO Parameter" Index="#x1a16" Flags="#x0000" SyncMan="3">
+							<Entry Name="1603. Status Word" Index="#x2643">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="1605. Main Actual Value [%]" Index="#x2645">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="1614. Motor current" Index="#x264e">
+								<Type>DINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Receive PDO Parameter" Index="#x1616" InOut="1" Flags="#x0000" SyncMan="2">
+							<Entry Name="1680. Fieldbus CTW 1" Index="#x2690">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="1682. Fieldbus REF 1" Index="#x2692">
+								<Type>INT</Type>
+							</Entry>
+						</Pdo>
+					</EtherCAT>
+				</Box>
+				<EtherCAT EnableVirtualSwitch="true" MaxSwitchPorts="3" MaxSwitchFrames="140"/>
+			</Device>
+		</Io>
+	</Project>
+</TcSmProject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="ST_VLTParameterData" Id="{931b9cd5-acd5-43a0-9825-a746f3192be3}">
+    <Declaration><![CDATA[TYPE ST_VLTParameterData :
+STRUCT
+	//nType		: UINT; //1 for number 2 for string.
+	nRdVal		: ULINT;
+	strRdVal	: STRING;
+	nWrVal		: UDINT;
+	strWrVal	: STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

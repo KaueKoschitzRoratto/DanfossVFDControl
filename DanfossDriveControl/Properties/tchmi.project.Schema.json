@@ -1,0 +1,70 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "DanfossVFDControl": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "DanfossVFDControl.usercontrol.json",
+      "id": "tchmi:project#/definitions/DanfossVFDControl",
+      "type": "object"
+    },
+    "UserControl1_0": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "DanfossParamAccessor.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/UserControl1_0"
+    },
+    "DanfossLCP": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "DanfossLCP.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/DanfossLCP"
+    },
+    "DanfossParamAccessor": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "DanfossParamAccessor.usercontrol.json",
+      "id": "tchmi:project#/definitions/DanfossParamAccessor",
+      "type": "object"
+    },
+    "Array(0..99) OF stGridData": {
+      "items": {
+        "$ref": "tchmi:project#/definitions/stGridData"
+      },
+      "type": "array",
+      "id": "tchmi:project#/definitions/Array(0..99) OF stGridData"
+    },
+    "stGridData": {
+      "properties": {
+        "ReadValue": {
+          "$ref": "tchmi:general#/definitions/ULINT"
+        },
+        "WriteValue": {
+          "$ref": "tchmi:general#/definitions/ULINT"
+        },
+        "index": {
+          "$ref": "tchmi:general#/definitions/UINT"
+        },
+        "name": {
+          "$ref": "tchmi:general#/definitions/String"
+        },
+        "DefaultValue": {
+          "definitions": {},
+          "$ref": "tchmi:general#/definitions/Number",
+          "description": "DefaultValue as set in the XML"
+        },
+        "Access": {
+          "title": "shows what access we have of the parameter"
+        }
+      },
+      "type": "object",
+      "id": "tchmi:project#/definitions/stGridData"
+    }
+  }
+}

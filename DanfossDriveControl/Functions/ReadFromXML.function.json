@@ -1,0 +1,30 @@
+﻿{
+  "function": {
+    "name": "readFromXML",
+    "namespace": "TcHmi.Functions.DanfossDriveControl",
+    "displayName": "ReadFromXML",
+    "description": "",
+    "waitMode": "Synchronous",
+    "category": "",
+    "returnValue": {
+      "type": "tchmi:general#/definitions/String"
+    },
+    "visible": true,
+    "injectContextObject": false,
+    "arguments": [
+      {
+        "name": "par1",
+        "displayName": "Parameter",
+        "type": "tchmi:general#/definitions/Number",
+        "description": "The index of the wanted param items",
+        "defaultValue": null,
+        "required": true,
+        "bindable": true,
+        "restParameter": false,
+        "asReference": false,
+        "allowControlAttributeBindingOptions": false
+      }
+    ]
+  },
+  "$schema": "../.hmiframework/Schema/FunctionDescription.Schema.json"
+}

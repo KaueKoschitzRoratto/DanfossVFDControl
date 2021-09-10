@@ -1,0 +1,57 @@
+﻿{
+  "parameters": [
+    {
+      "name": "data-tchmi-stdata",
+      "displayName": "stData",
+      "visible": true,
+      "type": "tchmi:server#/definitions/PLC1.ARRAY (0..50) OF ST_VLTParameterData",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "stData",
+      "propertySetterName": "setStData",
+      "propertyGetterName": "getStData",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-breaddone",
+      "displayName": "bReadDone",
+      "visible": true,
+      "type": "tchmi:general#/definitions/BOOL",
+      "category": "",
+      "description": "",
+      "defaultValue": false,
+      "defaultValueInternal": false,
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "bReadDone",
+      "propertySetterName": "setBReadDone",
+      "propertyGetterName": "getBReadDone",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-sstatus",
+      "displayName": "sStatus",
+      "visible": true,
+      "type": "tchmi:general#/definitions/String",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "sStatus",
+      "propertySetterName": "setSStatus",
+      "propertyGetterName": "getSStatus",
+      "refTo": ""
+    }
+  ],
+  "virtualRights": [],
+  "$schema": "../Packages/Beckhoff.TwinCAT.HMI.Framework.12.746.3/runtimes/native1.12-tchmi/Schema/UserControlConfig.Schema.json",
+  "description": ""
+}

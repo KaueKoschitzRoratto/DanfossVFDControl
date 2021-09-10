@@ -1,0 +1,31 @@
+﻿{
+  "function": {
+    "name": "ReadParameters",
+    "namespace": "TcHmi.Functions.DanfossDriveControl",
+    "displayName": "ReadParameters",
+    "description": "",
+    "waitMode": "Synchronous",
+    "category": "",
+    "returnValue": {
+      "type": "tchmi:general#/definitions/Number",
+      "description": "The Value read from the Parameter"
+    },
+    "visible": true,
+    "injectContextObject": false,
+    "arguments": [
+      {
+        "name": "SymbolName",
+        "displayName": "SymbolName",
+        "type": "tchmi:general#/definitions/String",
+        "description": "The name of the aray to read from",
+        "defaultValue": "",
+        "required": true,
+        "bindable": true,
+        "restParameter": false,
+        "asReference": false,
+        "allowControlAttributeBindingOptions": false
+      }
+    ]
+  },
+  "$schema": "../.hmiframework/Schema/FunctionDescription.Schema.json"
+}

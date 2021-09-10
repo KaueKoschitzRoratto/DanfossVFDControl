@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <GVL Name="GVL_HMI" Id="{37293a76-ebfd-481e-af9c-e78391d51033}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	bReset		: BOOL;
+	bWarning	: BOOL;
+	bHandOn		: BOOL;
+	bOkay		: BOOL;
+	bOff		: BOOL;
+	bAutoOn		: BOOL;
+	bAlarm		: BOOL;
+	arrParamData	: ARRAY[0..99] OF ST_VLTParameterData;
+	arrParamNo		: ARRAY[0..99] OF UINT;
+	nParamCount	:	INT;
+	bRdParams	: BOOL;
+	bRdDone		: BOOL;
+	bWrParams	: BOOL;
+	bWrDone		: BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

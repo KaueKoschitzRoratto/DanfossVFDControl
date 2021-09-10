@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_VLTDriveControl" Id="{84e8e6b9-1326-4cb4-925b-a7167143746e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VLTDriveControl
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	bDriveReady			: BOOL;
+	bDriveFault			: BOOL;
+	bDriveWarning		: BOOL;
+	bDriveRunning		: BOOL;
+	bDriveRunOnRef		: BOOL;
+	bDriveComOk			: BOOL;
+	nDriveMAV			: INT;
+	fDriveMtrCurrent	: REAL;
+	bParBusy			: BOOL;
+	bRdDone				: BOOL;
+	bRdFault			: BOOL;
+	nRdFaultCode		: UDINT;
+	bWrDone				: BOOL;
+	bWrFault			: BOOL;
+	bWrFaultCode		: BOOL;
+END_VAR
+VAR
+	fbDriveBasic		: VLT_ECAT_FC_BASIC;
+	fbDriveDiag			: VLT_ECAT_FC_DIAGNOSTICS;
+	fbDriveParams		: VLT_ECAT_FC_PARAM_ACCESS;
+	fbEcRead			: FB_EcCoESdoRead;
+	fbEcWrite			: FB_EcCoESdoWrite;
+	nECode				: ULINT;
+	
+	nSubIndex			: BYTE;
+	nRdResult			: ULINT;
+
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	
+]]></ST>
+    </Implementation>
+    <Method Name="DriveRun" Id="{485154f4-4648-466f-9f13-18d459541172}">
+      <Declaration><![CDATA[METHOD DriveRun : BOOL
+VAR_INPUT
+	bEnable	: BOOL;
+	bRun	: BOOL;
+	bReverse	: BOOL;
+	nSpeed	: INT;
+	bReset	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbDriveBasic(
+	DRV_EN:= bEnable, 
+	RUN:= bRun, 
+	REVERSE:= bReverse, 
+	REF_VALUE:= nSpeed, 
+	RESET:= GVL_HMI.bReset, 
+	READY=> bDriveReady, 
+	FAULT=> bDriveFault, 
+	WARNING=> bDriveWarning, 
+	RUNNING=> bDriveRunning, 
+	RUN_ON_REF=> bDriveRunOnRef, 
+	COMM_OK=> bDriveComOk, 
+	MAV=> nDriveMAV, 
+	MOTORCURRENT=> fDriveMtrCurrent);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDriveDiag" Id="{2756192f-8c63-481a-81b2-1b98b5a85b28}">
+      <Declaration><![CDATA[METHOD GetDriveDiag : BOOL
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	bAlarm			: BOOL;
+	nDriveAlarms	: ULINT;
+	bWarning		: BOOL;
+	nDriveWarningS	: ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbDriveDiag( 
+	ALARM_1=> nDriveAlarms, 
+	WARNING_1=> nDriveWarnings, 
+	EMCY_CODE=> nECODE);
+	
+IF ndriveAlarms >0 THEN
+	bAlarm := TRUE;
+ELSE
+	bAlarm := FALSE;
+END_IF
+
+IF nDriveWarnings >0 THEN
+	bWarning	:=TRUE;
+ELSE
+	bWarning := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Initialize" Id="{661e7db6-b53d-488a-a2b8-a471b383fd03}">
+      <Declaration><![CDATA[METHOD Initialize : BOOL
+VAR_INPUT
+	sDriveNetID	: STRING;
+	nDriveAddr	: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbDriveDiag.AMS_NET_ID:= sDriveNetID;
+fbDriveDiag.SLAVE_ADDR:= nDriveAddr; 
+fbDriveDiag.TIMEOUT:=T#5S; 
+	
+fbEcRead.sNETID:= sDriveNetID; 
+fbEcRead.nSlaveAddr:= nDriveAddr; 
+fbEcRead.tTIMEOUT:= T#5S; 
+Initialize := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RdDriveParams" Id="{9981c23f-a45b-4951-96f1-5d8ed1f38cca}">
+      <Declaration><![CDATA[{attribute 'Invoke_RPC_ENABLE' := '1'}
+METHOD RdDriveParams : BOOL
+VAR_INPUT
+	bRdParams		: BOOL;
+	nParameterNo	: UINT;
+	bIsString		: BOOL;
+END_VAR
+VAR_OUTPUT
+	nRESULT : ULINT;
+	StrRESULT	: STRING;
+	cbRd	: UDINT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+(*fbDriveParams(
+	EXECUTE:= bRdParams, 
+	RD_WR:= FALSE, 
+	IS_STR:= bIsString, 
+	PAR_NO:= nParameterNo,
+	SUBINDEX := 0, 
+	RD_VALUE=> nRESULT,
+	STR_RD_VALUE => strRESULT,
+	BUSY=> bParBusy, 
+	DONE=> bRdDone, 
+	FAULT=> bRdFault,
+	FAULT_CODE=>nRdFaultCode);
+	*)
+fbEcRead(
+	nSubIndex:= 0, 
+	nIndex:= UINT_TO_WORD(nParameterNo + 16#2000), 
+	pDstBuf:= ADR(nRdRESULT), 
+	cbBufLen:= SIZEOF(nRdRESULT), 
+	bExecute:= bRdParams,  
+	bBusy=> bParBusy, 
+	bError=> bRdFault, 
+	nErrId=> nRdFaultCode, 
+	cbRead=> cbRd
+);
+IF nRdResult >0 THEN
+	nRESULT := nRdResult;
+	nRdResult := 0;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WrDriveParams" Id="{73b07dda-c189-4a49-8ded-43d89d80b42a}">
+      <Declaration><![CDATA[METHOD WrDriveParams : BOOL
+VAR_INPUT
+	bWrParams		: BOOL;
+	nParameterNo	: UINT;
+	bIsString		: BOOL;
+	
+END_VAR
+VAR_INST
+	nWrIndex	: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbDriveParams(
+	EXECUTE:= bWrParams, 
+	RD_WR:= TRUE, 
+	IS_STR:= bIsString, 
+	PAR_NO:= nParameterNo,
+	WR_VALUE:= GVL_HMI.arrParamData[nWrIndex].nWrVal, 
+	STR_WR_VALUE:= GVL_HMI.arrParamData[nWrIndex].strWrVal, 
+	BUSY=> bParBusy, 
+	DONE=> bWrDone, 
+	FAULT=> bWrFault);
+	
+IF bWrDone THEN
+	nWrIndex := nWrIndex + 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
